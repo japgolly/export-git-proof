@@ -17,7 +17,6 @@ runs:
       shell: bash
       run: |
         git log --stat > /tmp/GIT_LOG.txt
-        echo >> /tmp/GIT_LOG.txt
 
     - name: Read gist
       id: read_gist
@@ -27,15 +26,22 @@ runs:
         gist_id: ${{ inputs.gist_id }}
         file_name: log.txt
 
+    - name: Store gist output as a file
+      shell: bash
+      run: |
+        cat <<JAPGOLLY_GITHUB_ACTION_EOF > actual.txt
+        ${{ steps.read_gist.outputs.content }}
+        JAPGOLLY_GITHUB_ACTION_EOF
+
     - name: Compare outputs
       shell: bash
       run: |
-        GIT_LOG="$(cat /tmp/GIT_LOG.txt)"
-        if [ "$GIT_LOG" != '${{ steps.read_gist.outputs.content }}' ]; then
+        echo >> /tmp/GIT_LOG.txt
+        diff="$(diff -u /tmp/GIT_LOG.txt actual.txt || true)"
+        if [ -n "$diff" ]; then
           echo "Gist contents not as expected."
-          echo '${{ steps.read_gist.outputs.content }}' > actual.txt
           echo ==============================================================================================
-          diff -u /tmp/GIT_LOG.txt actual.txt
+          echo "$diff"
           echo ==============================================================================================
           exit 1
         else
