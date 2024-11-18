@@ -1,0 +1,31 @@
+name: 'export-git-proof'
+description: 'Export proof of the state of a git repo'
+author: 'David Barri (@japgolly)'
+
+branding:
+  icon: "arrow-down"
+  color: "purple"
+
+# ======================================================================================================================
+inputs:
+
+  gist_id:
+    description: "id of the gist"
+    required: true
+
+# ======================================================================================================================
+runs:
+  using: 'composite'
+  steps:
+
+    - name: Read gist
+      id: gist_content
+      uses: gorgbus/gist-actions@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIST_TOKEN }}
+      with:
+        action: "get"
+        gist_id: "53838ce9fdf74882096c3e59bff2f566"
+        file_name: "log.txt"
+
+    - run: echo "meta.json content: ${{ steps.gist_content.outputs.content }}"
