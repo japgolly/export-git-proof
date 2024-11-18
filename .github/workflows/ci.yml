@@ -17,9 +17,8 @@ jobs:
 
       - name: Install
         uses: ./
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIST_TOKEN }}
         with:
+          token: ${{ secrets.GIST_TOKEN }}
           gist_id: "53838ce9fdf74882096c3e59bff2f566"
 
       - name: Test

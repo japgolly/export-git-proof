@@ -9,6 +9,10 @@ branding:
 # ======================================================================================================================
 inputs:
 
+  token:
+    description: "Access token for updating gist"
+    required: true
+
   gist_id:
     description: "id of the gist"
     required: true
@@ -22,14 +26,12 @@ runs:
       id: log
       shell: bash
       run: |
-        echo "LOG_OUTPUT<<EOF" >> $GITHUB_ENV
-        git log --stat >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
+        git log --stat > .....GIT_LOG.txt
 
     - name: Update gist
-      uses: gorgbus/gist-actions@main
+      uses: exuanbo/actions-deploy-gist@v1
       with:
-        action: update
+        token: ${{ inputs.token }}
         gist_id: ${{ inputs.gist_id }}
-        file_name: log.txt
-        content: ${{ env.LOG_OUTPUT }}
+        gist_file_name: log.txt
+        file_path: .....GIT_LOG.txt

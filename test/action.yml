@@ -16,9 +16,8 @@ runs:
     - name: Get git log
       shell: bash
       run: |
-        echo "LOG_OUTPUT<<EOF" >> $GITHUB_ENV
-        git log --stat >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
+        git log --stat > /tmp/GIT_LOG.txt
+        echo >> /tmp/GIT_LOG.txt
 
     - name: Read gist
       id: read_gist
@@ -31,10 +30,13 @@ runs:
     - name: Compare outputs
       shell: bash
       run: |
-        if [ "${{ env.LOG_OUTPUT }}" != "${{ steps.read_gist.outputs.content }}" ]; then
-          echo "Gist contents not as expected:"
-          echo "Expect: '${{ env.LOG_OUTPUT }}'"
-          echo "Actual: '${{ steps.read_gist.outputs.content }}'"
+        GIT_LOG="$(cat /tmp/GIT_LOG.txt)"
+        if [ "$GIT_LOG" != '${{ steps.read_gist.outputs.content }}' ]; then
+          echo "Gist contents not as expected."
+          echo '${{ steps.read_gist.outputs.content }}' > actual.txt
+          echo ==============================================================================================
+          diff -u /tmp/GIT_LOG.txt actual.txt
+          echo ==============================================================================================
           exit 1
         else
           echo "Confirmed: gist updated successfully."
