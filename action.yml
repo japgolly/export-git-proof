@@ -26,4 +26,6 @@ runs:
         gist_id: "53838ce9fdf74882096c3e59bff2f566"
         file_name: "log.txt"
 
-    - run: echo "meta.json content: ${{ steps.gist_content.outputs.content }}"
+    - name: omg programming
+      shell: bash
+      run: "echo 'meta.json content: ${{ steps.gist_content.outputs.content }}'"
