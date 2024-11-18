@@ -10,10 +10,9 @@ Usage:
   with:
     fetch-depth: 0
 
-- name: Install
+- name: Export git proof
   uses: japgolly/export-git-proof@main
-  env:
-    GITHUB_TOKEN: ${{ secrets.GIST_TOKEN }}
   with:
+    token: ${{ secrets.GIST_TOKEN }}
     gist_id: YOUR_GIST_ID
 ```
