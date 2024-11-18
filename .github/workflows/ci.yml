@@ -15,3 +15,5 @@ jobs:
 
       - name: Install
         uses: ./
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIST_TOKEN }}

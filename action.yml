@@ -21,8 +21,6 @@ runs:
     - name: Read gist
       id: gist_content
       uses: gorgbus/gist-actions@main
-      env:
-        GITHUB_TOKEN: ${{ secrets.GIST_TOKEN }}
       with:
         action: "get"
         gist_id: "53838ce9fdf74882096c3e59bff2f566"
