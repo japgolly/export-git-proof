@@ -1,10 +1,5 @@
-name: 'export-git-proof'
-description: 'Export proof of the state of a git repo'
-author: 'David Barri (@japgolly)'
-
-branding:
-  icon: "arrow-down"
-  color: "purple"
+name: 'export-git-proof-test'
+description: 'Tests'
 
 # ======================================================================================================================
 inputs:
@@ -25,10 +20,22 @@ runs:
         git log --stat > git_log_output.txt
         echo "::set-output name=log::$(cat git_log_output.txt)"
 
-    - name: Update gist
+    - name: Read gist
+      id: read_gist
       uses: gorgbus/gist-actions@main
       with:
-        action: update
+        action: get
         gist_id: ${{ inputs.gist_id }}
         file_name: log.txt
-        content: ${{ steps.log.outputs.log }}
+
+    - name: Compare outputs
+      shell: bash
+      run: |
+        if [ "${{ steps.log.outputs.log }}" != "${{ steps.read_gist.outputs.content }}" ]; then
+          echo "Outputs differ:"
+          echo "Step one: '${{ steps.log.outputs.log }}'"
+          echo "Step two: '${{ steps.read_gist.outputs.content }}'"
+          exit 1
+        else
+          echo "Confirmed: gist updated successfully."
+        fi

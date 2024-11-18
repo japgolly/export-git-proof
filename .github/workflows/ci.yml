@@ -17,3 +17,12 @@ jobs:
         uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.GIST_TOKEN }}
+        with:
+          gist_id: "53838ce9fdf74882096c3e59bff2f566"
+
+      - name: Test
+        uses: ./test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIST_TOKEN }}
+        with:
+          gist_id: "53838ce9fdf74882096c3e59bff2f566"
