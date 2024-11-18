@@ -22,8 +22,9 @@ runs:
       id: log
       shell: bash
       run: |
-        git log --stat > git_log_output.txt
-        echo "::set-output name=log::$(cat git_log_output.txt)"
+        echo "LOG_OUTPUT<<EOF" >> $GITHUB_ENV
+        git log --stat >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
 
     - name: Update gist
       uses: gorgbus/gist-actions@main
@@ -31,4 +32,4 @@ runs:
         action: update
         gist_id: ${{ inputs.gist_id }}
         file_name: log.txt
-        content: ${{ steps.log.outputs.log }}
+        content: ${{ env.LOG_OUTPUT }}

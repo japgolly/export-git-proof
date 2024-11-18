@@ -14,11 +14,11 @@ runs:
   steps:
 
     - name: Get git log
-      id: log
       shell: bash
       run: |
-        git log --stat > git_log_output.txt
-        echo "::set-output name=log::$(cat git_log_output.txt)"
+        echo "LOG_OUTPUT<<EOF" >> $GITHUB_ENV
+        git log --stat >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
 
     - name: Read gist
       id: read_gist
@@ -31,10 +31,10 @@ runs:
     - name: Compare outputs
       shell: bash
       run: |
-        if [ "${{ steps.log.outputs.log }}" != "${{ steps.read_gist.outputs.content }}" ]; then
-          echo "Outputs differ:"
-          echo "Step one: '${{ steps.log.outputs.log }}'"
-          echo "Step two: '${{ steps.read_gist.outputs.content }}'"
+        if [ "${{ env.LOG_OUTPUT }}" != "${{ steps.read_gist.outputs.content }}" ]; then
+          echo "Gist contents not as expected:"
+          echo "Expect: '${{ env.LOG_OUTPUT }}'"
+          echo "Actual: '${{ steps.read_gist.outputs.content }}'"
           exit 1
         else
           echo "Confirmed: gist updated successfully."
